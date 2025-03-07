@@ -1,37 +1,67 @@
-from flask import Flask, render_template, request
-import pandas as pd
 import os
+import psycopg2
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
-# File to store survey responses
-EXCEL_FILE = "survey_responses.xlsx"
+# Get database URL from environment variables
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://your_local_db_url_here")
+
+# Function to get database connection
+def get_db_connection():
+    conn = psycopg2.connect(DATABASE_URL)
+    return conn
+
+# Create Table (Run Only Once)
+def init_db():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS responses (
+            id SERIAL PRIMARY KEY,
+            invested_stocks TEXT,
+            bought_stocks TEXT,
+            risk_tolerance INTEGER,
+            trust TEXT,
+            time_preference TEXT
+        )
+    ''')
+    conn.commit()
+    conn.close()
+
+init_db()  # Ensure database is set up on startup
 
 @app.route("/", methods=["GET", "POST"])
 def survey():
     if request.method == "POST":
-        # Get responses from form
-        data = {
-            "Invested in Stocks": request.form.get("q1"),
-            "Bought Stocks in 6 Months": request.form.get("q2"),
-            "Risk Tolerance (0-10)": request.form.get("q3"),
-            "Trust in People": request.form.get("q4"),
-            "Time Preference": request.form.get("q5"),
-        }
+        q1 = request.form.get("q1")
+        q2 = request.form.get("q2")
+        q3 = request.form.get("q3")
+        q4 = request.form.get("q4")
+        q5 = request.form.get("q5")
 
-        # Convert to DataFrame
-        df = pd.DataFrame([data])
-
-        # Append to Excel file (create if not exists)
-        if not os.path.exists(EXCEL_FILE):
-            df.to_excel(EXCEL_FILE, index=False)
-        else:
-            with pd.ExcelWriter(EXCEL_FILE, mode="a", engine="openpyxl", if_sheet_exists="overlay") as writer:
-                df.to_excel(writer, index=False, header=False, startrow=writer.sheets["Sheet1"].max_row)
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('''
+            INSERT INTO responses (invested_stocks, bought_stocks, risk_tolerance, trust, time_preference)
+            VALUES (%s, %s, %s, %s, %s)
+        ''', (q1, q2, q3, q4, q5))
+        conn.commit()
+        conn.close()
 
         return "Thank you! Your response has been recorded."
 
     return render_template("survey.html")
+
+@app.route("/responses")
+def view_responses():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM responses")
+    data = cursor.fetchall()
+    conn.close()
+    
+    return "<br>".join([str(row) for row in data])
 
 if __name__ == "__main__":
     app.run(debug=True)
