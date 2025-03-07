@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University of Arizona Financial Survey</title>
+    <style>
+        :root {
+            --primary: #CC0033;
+            --secondary: #003366;
+            --background: #F4F4F4;
+            --text: #333;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            max-width: 700px;
+            margin: auto;
+            border-radius: 8px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.15);
+            text-align: left;
+        }
+        .logo {
+            display: block;
+            margin: 0 auto 20px auto;
+            width: 300px;
+        }
+        h1 {
+            font-size: 26px;
+            color: var(--primary);
+            text-align: center;
+        }
+        h2 {
+            font-size: 20px;
+            color: var(--secondary);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .question {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .options {
+            margin-bottom: 20px;
+        }
+        input[type="radio"], input[type="number"] {
+            margin-right: 8px;
+        }
+        button {
+            background-color: var(--primary);
+            color: white;
+            font-size: 16px;
+            padding: 12px 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #A10024;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--secondary);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img class="logo" src="https://www.arizona.edu/sites/default/files/www_webheader-01.svg" alt="University of Arizona Logo">
+        <h1>University of Arizona</h1>
+        <h2>Financial Literacy Survey</h2>
+
+        <form method="POST">
+            <div class="question">1. Have you ever invested in stocks, bonds, or mutual funds?</div>
+            <div class="options">
+                <input type="radio" name="q1" value="Yes" required> Yes<br>
+                <input type="radio" name="q1" value="No"> No<br>
+            </div>
+
+            <div class="question">2. Have you bought or sold stocks in the last 6 months?</div>
+            <div class="options">
+                <input type="radio" name="q2" value="Yes" required> Yes<br>
+                <input type="radio" name="q2" value="No"> No<br>
+            </div>
+
+            <div class="question">3. How willing are you to take risks? (Scale 0-10)</div>
+            <input type="number" name="q3" min="0" max="10" required><br>
+
+            <div class="question">4. Can most people be trusted?</div>
+            <div class="options">
+                <input type="radio" name="q4" value="Most people can be trusted" required> Most people can be trusted<br>
+                <input type="radio" name="q4" value="Need to be very careful"> Need to be very careful<br>
+                <input type="radio" name="q4" value="I don’t know"> I don’t know<br>
+            </div>
+
+            <div class="question">5. Would you prefer $40 today or $41 in a week?</div>
+            <div class="options">
+                <input type="radio" name="q5" value="$40 today" required> $40 today<br>
+                <input type="radio" name="q5" value="$41 in a week"> $41 in a week<br>
+            </div>
+
+            <button type="submit">Submit Survey</button>
+        </form>
+
+        <p class="footer">© 2025 University of Arizona. All Rights Reserved.</p>
+    </div>
+</body>
+</html>
